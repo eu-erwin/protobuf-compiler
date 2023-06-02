@@ -24,3 +24,5 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Push docker image
+      run: docker push erwineu/protobuf-compiler:latest
