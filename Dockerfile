@@ -4,6 +4,21 @@ RUN npm install -g ts-protoc-gen \
     protoc-gen-js
 
 ARG GO_VERSION=${GO_VERSION:-latest}
+FROM golang:$GO_VERSION AS php_builder
+WORKDIR /code
+RUN apt-get update && \
+    apt-get install -y autoconf cmake && \
+    git clone -b v1.34.1 --depth 1 https://github.com/grpc/grpc && \
+    cd grpc && \
+    git submodule update --init && \
+    mkdir -p cmake/build && \
+    cd cmake/build && \
+    cmake ../.. && \
+    make protoc grpc_php_plugin && \
+    cp grpc_php_plugin /usr/bin/grpc_php_plugin && \
+    rm -rf /tmp/grpc
+
+ARG GO_VERSION=${GO_VERSION:-latest}
 FROM golang:$GO_VERSION
 
 LABEL org.opencontainers.image.authors="eu.erwin@gmx.de" \
@@ -19,6 +34,9 @@ WORKDIR /code
 
 RUN go mod init __MODULE__ && \
     go get github.com/google/protobuf@v4.23.1+incompatible && \
+
+COPY --from=php_builder /usr/bin/grpc_php_plugin \
+    /usr/bin/
 
 # Separated both copy, for cached layer
 COPY --from=ts_builder /usr/local/bin/node \
