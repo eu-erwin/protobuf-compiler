@@ -1,0 +1,32 @@
+{
+  "ts-node": {
+    "transpileOnly": true   /* Skips type checking for faster unit testing */
+  },
+  "compilerOptions": {
+    "lib": [
+      "es2015",
+      "es2017",
+      "dom"
+    ],
+    "declaration": true,    /* Generates corresponding '.d.ts' file. */
+    "outDir": "./"    /* Redirect output structure to the directory. */
+  },
+  "include": [
+    "./public-api.ts"
+  ],
+  "exclude": [
+    ".gitlab-ci.yml",
+    "tsconfig.json",
+    "composer.json",
+    "compile.sh",
+    "script.sh",
+    "node_modules",
+    "env",
+    "env.dist",
+    "proto",
+    "server",
+    "client/dart",
+    "client/php",
+    "lib"
+  ]
+}

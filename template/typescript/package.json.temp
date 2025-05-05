@@ -1,0 +1,33 @@
+{
+  "name": "__NAME__",
+  "version": "0.0.0",
+  "description": "__DESCRIPTION__",
+  "main": "./public-api.js",
+  "types": "./public-api.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@improbable-eng/grpc-web": "^0.15.0",
+    "@types/google-protobuf": "^3.0.0",
+    "google-protobuf": "^3.0.0",
+    "typescript": "^3.7.4"
+  },
+  "files": [
+    "./client/typescript",
+    "public-api.ts",
+    "public-api.d.ts",
+    "public-api.js",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "__REPO_URL__"
+  },
+  "author": "__AUTHOR__ <__EMAIL__>",
+  "license": "MIT"
+}

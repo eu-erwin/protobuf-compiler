@@ -1,0 +1,27 @@
+{
+  "name": "__NAME__",
+  "version": "0.0.0",
+  "description": "__DESCRIPTION__",
+  "autoload": {
+    "psr-4": {
+      "Google\\Protobuf\\": "client/php/Google/Protobuf/",
+      "GPBMetadata\\Google\\Protobuf\\": "client/php/GPBMetadata/Google/Protobuf/",
+      "__METADATA_NAMESPACE__\\": "client/php/__METADATA_NAMESPACE__/",
+      "__CLIENT_NAMESPACE__\\": "client/php/__CLIENT_NAMESPACE__/"
+    }
+  },
+  "require": {
+    "ext-grpc": "*",
+    "grpc/grpc": "^1.0.0",
+    "google/protobuf": "^3.0.0"
+  },
+  "authors": [
+    {
+      "name": "__AUTHOR__",
+      "email": "__EMAIL__",
+      "homepage": "__HOMEPAGE__",
+      "role": "__ROLE__"
+    }
+  ],
+  "license": "MIT"
+}

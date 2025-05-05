@@ -34,6 +34,14 @@ WORKDIR /code
 
 RUN go mod init __MODULE__ && \
     go get github.com/google/protobuf@v4.23.1+incompatible && \
+    go get github.com/googleapis/googleapis && \
+    go get github.com/mwitkow/go-proto-validators && \
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2 && \
+    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.14.0 && \
+    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.14.0 && \
+    go install github.com/favadi/protoc-go-inject-tag@v1.4.0 && \
+    go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
 
 COPY --from=php_builder /usr/bin/grpc_php_plugin \
     /usr/bin/
@@ -48,11 +56,9 @@ RUN ln -s /usr/local/lib/node_modules/ts-protoc-gen/bin/protoc-gen-ts /usr/bin/p
     ln -s /usr/local/lib/node_modules/protoc-gen-js/bin/protoc-gen-js /usr/bin/protoc-gen-js && \
     ln -s /home/$UNAME/.pub-cache/bin/protoc-gen-dart /usr/bin/protoc-gen-dart
 
-    go get github.com/googleapis/googleapis && \
-    go get github.com/mwitkow/go-proto-validators && \
-    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
-    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2 && \
-    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.14.0 && \
-    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.14.0 && \
-    go install github.com/favadi/protoc-go-inject-tag@v1.4.0 && \
-    go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
+RUN mkdir ~/.ssh && \
+    mkdir /var/protobuf && \
+    mkdir /var/protobuf/template && \
+    chmod ugo+rw -R /var/protobuf
+
+COPY template /var/protobuf/template/

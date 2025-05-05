@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package __package__;
+
+option go_package = "github.com/eu-erwin/protobuf-__package__;__package__";
+option php_namespace = "__namespace__Client";
+option php_metadata_namespace = "__namespace__Metadata\\Proto";
+
+
+message __namespace__ {
+  string id = 1;
+
+  repeated string contexts = 2;
+
+  google.protobuf.Timestamp createdAt = 3;
+
+  int32 number_count = 4;
+
+  bool verified = 5;
+
+  string settings = 6;
+}
+

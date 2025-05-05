@@ -1,0 +1,95 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_TAG != null || $CI_COMMIT_MESSAGE =~ /^(CI-Release|Gitlab-Release|\[SKIP\]).*/'
+      when: never
+    - if: '$CI_COMMIT_MESSAGE =~ /^(Merge branch).*/ && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^(release|master).*/'
+      when: always
+    - if: '$CI_COMMIT_BRANCH =~ /^(release|master|develop).*/'
+      when: always
+    - when: never
+
+cache: &global_cache
+  key: $CI_COMMIT_SHA
+  paths:
+    - client
+    - server
+    - package.json
+    - public-api.ts
+    - tsconfig.json
+    - pubspec.yaml
+    - analysis_options.yaml
+    - composer.json
+    - go.mod
+  policy: pull-push
+
+build:
+  stage: build
+  dependencies:
+    - preparation
+  cache:
+    <<: *global_cache
+    policy: push
+  tags:
+    - vps-runner
+  script:
+    - bash /home/gitlab-runner/protobuf/update.sh
+    - make build branch=$CI_COMMIT_BRANCH project=$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME version=$VERSION_TAG lib=$GENERIC_NAME
+
+preparation:
+  stage: .pre
+  tags:
+    - vps-runner
+  artifacts:
+    reports:
+      dotenv: .gitlab.env
+  script:
+    - make docker-pull
+    - |
+      RELEASE="latest"
+      VERSION_TAG="0.0.0"
+      GENERIC_NAME="__NAME__"
+      VERSION_CMD="--patch"
+      BRANCH=(${CI_COMMIT_REF_NAME//// })
+      BRANCH_VER="0.0.0"
+      LIBRARY_TAG="0.0.0"
+
+      if [[ "${BRANCH[0]}" == "release" || "${BRANCH[0]}" == "develop" ]]; then
+        RELEASE="${BRANCH[0]}"
+        BRANCH_VER="${BRANCH[1]}"
+      fi
+
+      PACKAGE_VER="0.0.0"
+      if [[ -f "$PWD/package.json" ]]; then
+        PACKAGE_VER="$(get-version -f "$PWD/package.json" -d "$BRANCH_VER")"
+      fi
+
+      COMPOSER_VER="0.0.0"
+      if [[ -f "$PWD/composer.json" ]]; then
+        COMPOSER_VER="$(get-version -f "$PWD/composer.json" -d "$BRANCH_VER")"
+      fi
+
+      LIBRARY_TAG="$(version-tools get-latest-version "$COMPOSER_VER" "$PACKAGE_VER")"
+      VERSION_TAG="$(version-tools get-latest-version "$LIBRARY_TAG" "$BRANCH_VER")"
+
+      echo "Current version: $VERSION_TAG"
+      if [[ $CI_COMMIT_MESSAGE == *"MINOR-RELEASE"* ]]; then
+        VERSION_CMD="--minor"
+      fi
+
+      echo "$VERSION_TAG - $BRANCH_VER  || $LIBRARY_TAG - $BRANCH_VER"
+      if [[ $VERSION_CMD != "--major" ]]; then
+        if [[ "$VERSION_TAG" != "$BRANCH_VER" || "$LIBRARY_TAG" == "$BRANCH_VER" ]]; then
+          VERSION_TAG="$(get-version "$VERSION_CMD" -v "$VERSION_TAG")"
+        fi
+      fi
+
+      if [[ "latest" == "$RELEASE" && ! -f "$PWD/package.json" && ! -f "$PWD/composer.json" ]]; then
+        VERSION_TAG="0.0.0"
+      fi
+
+      echo "$RELEASE"
+      echo "$VERSION_TAG"
+      echo "RELEASE=$RELEASE" >> .gitlab.env
+      echo "VERSION_TAG=$VERSION_TAG" >> .gitlab.env
+      echo "VERSION_CMD=$VERSION_CMD" >> .gitlab.env
+      echo "GENERIC_NAME=$GENERIC_NAME" >> .gitlab.env

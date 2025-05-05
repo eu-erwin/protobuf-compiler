@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "__filename__.proto";
+
+package __package__;
+
+option go_package = "github.com/eu-erwin/protobuf-__package__;__package__";
+option php_namespace = "__namespace__Client";
+option php_metadata_namespace = "__namespace__Metadata\\Proto";
+
+service ServiceName {
+  rpc ServiceMethod(ServiceRequest) returns (ServiceResponse);
+  rpc StreamServiceMethod(stream RealTimeRequest) returns (stream RealTimeResponse) {};
+}
+
+message ServiceRequest {
+  __namespace__ request = 1;
+}
+
+message ServiceResponse {
+  __namespace__ response = 1;
+}
+
+message RealTimeRequest {
+  __namespace__ request = 1;
+}
+
+message RealTimeResponse {
+  __namespace__ response = 1;
+}
