@@ -66,6 +66,9 @@ RUN go mod init __MODULE__ && \
     go install github.com/favadi/protoc-go-inject-tag@v1.4.0 && \
     go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
 
+COPY compiler.sh /usr/local/bin/compiler
+COPY script.sh /usr/local/bin/compile
+
 COPY --from=php_builder /usr/bin/grpc_php_plugin \
     /usr/bin/
 
@@ -87,3 +90,9 @@ RUN mkdir ~/.ssh && \
 COPY template /var/protobuf/template/
 
 COPY --from=upx /app /bin/naming
+
+RUN chmod +x /usr/local/bin/compiler && \
+    chmod +x /usr/local/bin/compile
+
+ENTRYPOINT ["compiler"]
+CMD ["compile"]
