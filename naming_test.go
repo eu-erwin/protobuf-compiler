@@ -1,6 +1,8 @@
 package main_test
 
 import (
+	"context"
+	"log/slog"
 	"testing"
 
 	m "github.com/eu-erwin/protobuf-compiler"
@@ -35,6 +37,8 @@ func TestNaming(t *testing.T) {
 	for i := range tests {
 		t.Run(tests[i].name, func(t *testing.T) {
 			n := m.NewNaming(
+				context.Background(),
+				slog.Default(),
 				m.WithLowercase(tests[i].lowercase),
 				m.WithSnakeCase(tests[i].snakeCase),
 				m.WithKebabCase(tests[i].kebabCase),
@@ -72,6 +76,8 @@ func TestErrorNaming(t *testing.T) {
 	for i := range tests {
 		t.Run("Test"+string(rune(i)), func(t *testing.T) {
 			n := m.NewNaming(
+				context.Background(),
+				slog.Default(),
 				m.WithLowercase(tests[i].lowercase),
 				m.WithSnakeCase(tests[i].snakeCase),
 				m.WithKebabCase(tests[i].kebabCase),
