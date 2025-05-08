@@ -9,17 +9,19 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
     go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.14.0 && \
     go install github.com/favadi/protoc-go-inject-tag@v1.4.0
 
-COPY go.mod go.sum naming.go /code/
+ADD cmd /code/cmd
+COPY go.mod go.sum main.go /code/
+
 RUN go build \
     -a -ldflags "-s -w -X main.appCommit=$REVISION -X main.appVersion=$VERSION -X main.appEnv=prod" \
-    -o naming \
-    naming.go
+    -o helper \
+    main.go
 
 FROM gruebel/upx:latest AS upx
 WORKDIR /code
-COPY --from=go_builder /code/naming /naming
+COPY --from=go_builder /code/helper /helper
 # Compress the binary and copy it to final image
-RUN upx --best --lzma -o /app /naming
+RUN upx --best --lzma -o /app /helper
 
 FROM node:18.20.4 AS ts_builder
 WORKDIR /code
@@ -89,10 +91,10 @@ RUN mkdir ~/.ssh && \
 
 COPY template /var/protobuf/template/
 
-COPY --from=upx /app /bin/naming
-
 RUN chmod +x /usr/local/bin/compiler && \
     chmod +x /usr/local/bin/compile
+
+COPY --from=upx /app /bin/helper
 
 ENTRYPOINT ["compiler"]
 CMD ["compile"]

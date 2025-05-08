@@ -13,7 +13,7 @@ else
     exit 1;
   else
     CAMEL_CASE="${GENERIC_NAME}"
-    LOWER_UNDER_CASE=$(naming -l -s "${GENERIC_NAME}");
+    LOWER_UNDER_CASE=$(helper naming -ls "${GENERIC_NAME}");
     GENERIC_DESC="Protobuf definition for ${GENERIC_NAME} service"
     LIBRARY_NAME="${LIBRARY_NAME:-protobuf/${GENERIC_NAME}}"
     LIBRARY_DESCRIPTION="${LIBRARY_DESCRIPTION:-${GENERIC_DESC}}"
@@ -179,10 +179,10 @@ function createFile() {
 
   # Generate naming
 	name=$GENERIC_NAME;
-	namespace=$(naming -p "$name");
-	package=$(naming -l -s "$name");
-	msg_filename=$(naming -l -s "$name");
-	capitalize=$(naming -t "$name");
+	namespace=$(helper naming -p "$name");
+	package=$(helper naming -ls "$name");
+	msg_filename=$(helper naming -ls "$name");
+	capitalize=$(helper naming -t "$name");
 
   if [ -e "./$FILE" ]; then
     if [[ "true" != "$FORCE" ]]; then
@@ -209,10 +209,10 @@ function createMessageService() {
 
   # Generate naming
 	name=$GENERIC_NAME;
-	namespace=$(naming -p "$name");
-	package=$(naming -l -s "$name");
-	msg_filename=$(naming -l -s "$name");
-	capitalize=$(naming -t "$name");
+	namespace=$(helper naming -p "$name");
+	package=$(helper naming -ls "$name");
+	msg_filename=$(helper naming -ls "$name");
+	capitalize=$(helper naming -t "$name");
 
   if [ -e "./$FILE" ]; then
     echo "$FILE exists. Abort"
