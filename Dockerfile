@@ -57,19 +57,16 @@ LABEL org.opencontainers.image.authors="eu.erwin@gmx.de" \
 
 WORKDIR /code
 
-RUN go mod init __MODULE__ && \
-    go get github.com/google/protobuf@v4.23.1+incompatible && \
-    go get github.com/googleapis/googleapis && \
-    go get github.com/mwitkow/go-proto-validators && \
-    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
-    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2 && \
-    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.14.0 && \
-    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.14.0 && \
-    go install github.com/favadi/protoc-go-inject-tag@v1.4.0 && \
-    go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
 
 COPY compiler.sh /usr/local/bin/compiler
 COPY script.sh /usr/local/bin/compile
+
+COPY --from=go_builder /go/bin/protoc-gen-go \
+    /go/bin/protoc-gen-go-grpc \
+    /go/bin/protoc-gen-grpc-gateway \
+    /go/bin/protoc-gen-openapiv2 \
+    /go/bin/protoc-go-inject-tag \
+    /go/bin/
 
 COPY --from=php_builder /usr/bin/grpc_php_plugin \
     /usr/bin/
@@ -93,6 +90,14 @@ COPY template /var/protobuf/template/
 
 RUN chmod +x /usr/local/bin/compiler && \
     chmod +x /usr/local/bin/compile
+
+RUN ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts && \
+    go env -w GO111MODULE="on" && \
+    go mod init example.com/compiler && \
+    go get github.com/google/protobuf@v5.28.2+incompatible && \
+    go get github.com/googleapis/googleapis && \
+    go get github.com/mwitkow/go-proto-validators && \
+    go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
 
 COPY --from=upx /app /bin/helper
 
