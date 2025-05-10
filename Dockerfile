@@ -55,6 +55,11 @@ LABEL org.opencontainers.image.authors="eu.erwin@gmx.de" \
     version=$VERSION \
     description="Docker image based for compiling protobuf in four languages golang, typescript, dart and php"
 
+RUN wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/dart.gpg && \
+    echo 'deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' | tee /etc/apt/sources.list.d/dart_stable.list
+RUN apt-get update && \
+    apt-get -y install protobuf-compiler ^dart
+
 WORKDIR /code
 
 ARG UNAME=${UNAME:-compiler}
@@ -109,6 +114,8 @@ RUN mkdir -p -m 0600 /home/$UNAME/.ssh && \
     chown $UNAME:$UNAME -R /home/$UNAME /home/$UNAME/.ssh /go /code
 
 USER "$UNAME"
+
+RUN dart pub global activate protoc_plugin
 
 ENV HOME=/home/$UNAME
 WORKDIR /code
