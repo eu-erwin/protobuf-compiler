@@ -57,6 +57,9 @@ LABEL org.opencontainers.image.authors="eu.erwin@gmx.de" \
 
 WORKDIR /code
 
+ARG UNAME=${UNAME:-compiler}
+ARG UID=${UID:-1000}
+ARG GID=${GID:-1000}
 
 COPY compiler.sh /usr/local/bin/compiler
 COPY script.sh /usr/local/bin/compile
@@ -98,6 +101,20 @@ RUN ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts && \
     go get github.com/googleapis/googleapis && \
     go get github.com/mwitkow/go-proto-validators && \
     go install github.com/mwitkow/go-proto-validators/protoc-gen-govalidators
+
+RUN groupadd -g $GID -o $UNAME && \
+    useradd -m -d /home/$UNAME -u $UID -g $GID -o -s /bin/bash $UNAME
+
+RUN mkdir -p -m 0600 /home/$UNAME/.ssh && \
+    chown $UNAME:$UNAME -R /home/$UNAME /home/$UNAME/.ssh /go /code
+
+USER "$UNAME"
+
+ENV HOME=/home/$UNAME
+WORKDIR /code
+
+ENV PATH=$PATH:/usr/local/go/bin
+ENV GO111MODULE="on"
 
 COPY --from=upx /app /bin/helper
 
