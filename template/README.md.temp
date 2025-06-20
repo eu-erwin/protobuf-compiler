@@ -3,8 +3,8 @@
 installing clients
 ## Typescript client
 ```shell
-yarn add git+ssh://git@github.com:eu-erwin/protobuf-__NAME__.git#develop
-yarn add @eu-erwin/protobuf-__NAME__
+yarn add git+ssh://git@github.com:__organization__/protobuf-__NAME__.git#develop
+yarn add @__organization__/protobuf-__NAME__
 ```
 
 ## Php client
@@ -16,7 +16,7 @@ composer.json
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:eu-erwin/protobuf-__NAME__.git"
+            "url": "git@github.com:__organization__/protobuf-__NAME__.git"
         }
     ],
     "require": {
@@ -34,7 +34,7 @@ pubspec.yaml
 ```yaml
 protobuf_place:
     git:
-        url: git@github.com:eu-erwin/protobuf-__NAME__.git
+        url: git@github.com:__organization__/protobuf-__NAME__.git
         ref: vx.x.x
 ```
 
@@ -42,32 +42,32 @@ protobuf_place:
 ```go
 package main
 
-import __NAME__sdk "github.com:eu-erwin/protobuf-__NAME__"
+import __NAME__sdk "github.com:__organization__/protobuf-__NAME__"
 ```
 
 ```shell
-go get github.com/eu-erwin/protobuf-__NAME__
+go get github.com/__organization__/protobuf-__NAME__
 ```
 
 # Related project repos and images
-- [Protobuf](https://github.com/eu-erwin/protobuf-__NAME__)
+- [Protobuf](https://github.com/__organization__/protobuf-__NAME__)
   contains all generated library for PHP, Typescript, dart and Go
     - Go
-      `go get github.com:eu-erwin/protobuf-__NAME__`
+      `go get github.com:__organization__/protobuf-__NAME__`
     - PHP
       `composer require protobuf/__NAME__`
     - Typescript
-      `yarn add @eu-erwin/protobuf-__NAME__`
+      `yarn add @__organization__/protobuf-__NAME__`
     - Dart
       `
       protobuf_place:
         git:
-          url: git@github.com:eu-erwin/protobuf-__NAME__.git
+          url: git@github.com:__organization__/protobuf-__NAME__.git
           ref: vx.x.x
       `
 
 # following might exist or not, it depends on the service itself.
-- Service [Server](https://github.com/eu-erwin/protobuf-__NAME__)
+- Service [Server](https://github.com/__organization__/protobuf-__NAME__)
 - Docker Image
-  erwineu/__NAME__
-  `docker pull erwineu/__NAME__`
+  __organization__/__NAME__
+  `docker pull __organization__/__NAME__`

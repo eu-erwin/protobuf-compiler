@@ -4,7 +4,7 @@ import "__filename__.proto";
 
 package __package__;
 
-option go_package = "github.com/eu-erwin/protobuf-__package__;__package__";
+option go_package = "github.com/__organization__/protobuf-__package__;__package__";
 option php_namespace = "__namespace__Client";
 option php_metadata_namespace = "__namespace__Metadata\\Proto";
 

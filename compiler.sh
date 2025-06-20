@@ -201,6 +201,7 @@ function createFile() {
 	sed -i -e "s/__filename__/$msg_filename/g" "./$FILE"
 	sed -i -e "s/__namespace__/$namespace/g" "./$FILE"
 	sed -i -e "s/__capitalize__/$capitalize/g" "./$FILE"
+	sed -i -e "s/__organization__/$organization/g" "./$FILE"
 }
 
 function createMessageService() {
@@ -209,6 +210,7 @@ function createMessageService() {
 
   # Generate naming
 	name=$GENERIC_NAME;
+	organization=$ORGANIZATION;
 	namespace=$(helper naming -p "$name");
 	package=$(helper naming -ls "$name");
 	msg_filename=$(helper naming -ls "$name");
@@ -229,6 +231,7 @@ function createMessageService() {
 	sed -i -e "s/__filename__/$msg_filename/g" "./$TARGET"
 	sed -i -e "s/__namespace__/$namespace/g" "./$TARGET"
 	sed -i -e "s/__capitalize__/$capitalize/g" "./$TARGET"
+	sed -i -e "s/__organization__/$organization/g" "./$TARGET"
 }
 
 function createDartLibraryPackage() {
@@ -425,7 +428,7 @@ elif [[ $SUB_COMMAND == "init" ]]; then
   echo "Initialize"
   createFile "README.md"
   createFile ".gitlab-ci.yml"
-  createMessageService "proto/message.proto" "${GENERIC_NAME}.proto"
-  createMessageService "proto/services.proto" "${GENERIC_NAME}_service.proto"
+  createMessageService "message.proto" "${GENERIC_NAME}.proto"
+  createMessageService "services.proto" "${GENERIC_NAME}_service.proto"
 fi
 
