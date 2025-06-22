@@ -25,6 +25,7 @@ func Execute(
 	ctx context.Context,
 	logger *slog.Logger,
 ) {
+	initCmd := NewInitCmd(ctx, logger)
 	templatingCmd := NewTemplatingCmd(ctx, logger)
 	versioningCmd := NewVersioningCmd(ctx, logger)
 	namingCmd := NewNamingCmd(
@@ -39,6 +40,7 @@ func Execute(
 		naming.WithPascalCase(true),
 	)
 	rootCmd.AddCommand(
+		initCmd,
 		templatingCmd,
 		versioningCmd,
 		namingCmd,
