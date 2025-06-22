@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/eu-erwin/protobuf-compiler/cmd/naming"
 )
 
 var rootCmd = &cobra.Command{
@@ -27,13 +29,13 @@ func Execute(
 	namingCmd := NewNamingCmd(
 		ctx,
 		logger,
-		WithLowercase(true),
-		WithSnakeCase(true),
-		WithKebabCase(true),
-		WithCamelcase(true),
-		WithCapitalize(true),
-		WithUppercase(true),
-		WithPascalCase(true),
+		naming.WithLowercase(true),
+		naming.WithSnakeCase(true),
+		naming.WithKebabCase(true),
+		naming.WithCamelcase(true),
+		naming.WithCapitalize(true),
+		naming.WithUppercase(true),
+		naming.WithPascalCase(true),
 	)
 	rootCmd.AddCommand(
 		versioningCmd,

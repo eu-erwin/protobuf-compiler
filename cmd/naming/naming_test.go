@@ -1,11 +1,11 @@
-package cmd_test
+package naming_test
 
 import (
 	"context"
 	"log/slog"
 	"testing"
 
-	m "github.com/eu-erwin/protobuf-compiler/cmd"
+	m "github.com/eu-erwin/protobuf-compiler/cmd/naming"
 )
 
 func TestNaming(t *testing.T) {
