@@ -7,7 +7,8 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2 && \
     go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.14.0 && \
     go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.14.0 && \
-    go install github.com/favadi/protoc-go-inject-tag@v1.4.0
+    go install github.com/favadi/protoc-go-inject-tag@v1.4.0 && \
+    go install github.com/kissingo/protoc-gen-go-handler
 
 ADD cmd /code/cmd
 COPY go.mod go.sum main.go /code/
@@ -74,6 +75,7 @@ COPY --from=go_builder /go/bin/protoc-gen-go \
     /go/bin/protoc-gen-grpc-gateway \
     /go/bin/protoc-gen-openapiv2 \
     /go/bin/protoc-go-inject-tag \
+    /go/bin/protoc-gen-go-handler \
     /go/bin/
 
 COPY --from=php_builder /usr/bin/grpc_php_plugin \
